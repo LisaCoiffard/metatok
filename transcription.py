@@ -1,5 +1,6 @@
-from datetime import datetime, timedelta
 import os
+from datetime import datetime, timedelta
+
 import pandas as pd
 import requests
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -17,12 +18,10 @@ def get_transcription(video_id):
 
 class Transcript:
 
-    def __init__(self, time_frame, channel_ids=None) -> None:
-        if channel_ids is None:
-            channel_ids = CHANNEL_IDS
+    def __init__(self, time_frame, channels=CHANNEL_IDS) -> None:
         self.time_frame = time_frame
 
-        self.video_ids = [vid for channel_id in channel_ids for vid in self._get_videos(channel_id)]
+        self.video_ids = [vid for channel_id in channels for vid in self._get_videos(channel_id)]
         self.video_ids = pd.DataFrame(self.video_ids)
         self.video_ids = self._filter_time()
 
@@ -41,7 +40,9 @@ class Transcript:
         response = requests.get(base_url, params=params)
         data = response.json()
         
-        videos = [{"vid":item['id']['videoId'], "date":pd.to_datetime(item["snippet"]["publishTime"]).replace(tzinfo=None)} for item in data['items']]
+        videos = [{"vid":item['id']['videoId'], 
+                   "date":pd.to_datetime(item["snippet"]["publishTime"]).replace(tzinfo=None)} 
+                for item in data['items']]
         return videos
     
     def _filter_time(self):
