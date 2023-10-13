@@ -18,7 +18,7 @@ def summarize_video(text):
         Summary:
     """).candidates[0]
     print("response \n",response)
-    return response
+    return str(response)
 
 
 def get_global_summary(text_list):
@@ -44,5 +44,3 @@ if __name__=="__main__":
     # save summariesofsummary
     with open("summaries_of_summary.txt", "w") as f:
         f.write(summaries_ofsummary)
-    df["summary_of_summary"] = summaries_ofsummary
-    df.to_csv("summary.csv")
