@@ -4,7 +4,7 @@ import time
 from rxconfig import config
 from typing import List
 from tiktok_popnews.styles import *
-from tiktok_popnews.backend import *
+from tiktok_popnews.summary import *
 
 import reflex as rx
 
@@ -13,7 +13,7 @@ filename = f"{config.app_name}/{config.app_name}.py"
 
 
 class State(rx.State):
-    channels: List[str] = ["https://www.youtube.com/@PopCultureCrisis", "https://www.youtube.com/@popculturenews"]
+    channels: list[str] = ["UCmCylh0ZK5plLdvueo06OYA", "UC2QtjeenJ3KtEli0w4vq5vw", "UCjDsbbzHgTrGc4Ff26TJtsA", "UCe8vRS6vFq5GmAZIj53Iikw"]
     video_generated = False
     processing = False
     days_to_cover = "1"
@@ -40,11 +40,11 @@ class State(rx.State):
         self.processing = True
 
     def process(self):
-        time.sleep(1)
-        process_llm()
+        youtube_channels_to_summary_mpr(["UCmCylh0ZK5plLdvueo06OYA", "UC2QtjeenJ3KtEli0w4vq5vw", "UCjDsbbzHgTrGc4Ff26TJtsA", "UCe8vRS6vFq5GmAZIj53Iikw"], True, State.days_to_cover)
         self.video_generated = True
         self.processing = False
-        self.video = "https://www.youtube.com/watch?v=Syupq6XpAcE"
+        #self.video = "https://www.youtube.com/watch?v=Syupq6XpAcE"
+        self.video = "result.mp4"
 
 
 def new_channel() -> rx.Component:
@@ -134,7 +134,7 @@ def result() -> rx.Component:
 
 def result2() -> rx.Component:
     return rx.vstack(
-        rx.video(url="https://www.youtube.com/watch?v=Syupq6XpAcE", style=video_style),
+        rx.video(url="result.mp4", style=video_style),
     )
 
 
