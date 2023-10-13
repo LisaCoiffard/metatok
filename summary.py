@@ -35,18 +35,18 @@ def get_global_summary(text_list):
         {text}""").candidates[0]
     return str(response)
 def get_data():
-    return pd.read_csv("transcription.csv")
+    return pd.read_csv("data/transcription.csv")
 
 if __name__=="__main__":
     load_summary = True
     if load_summary:
-        df = pd.read_csv("summary.csv")
+        df = pd.read_csv("data/summary.csv")
     else:
         df = get_data()
         df["summary"] = df["text"].apply(summarize_video)
-        df.to_csv("summary.csv")
+        df.to_csv("data/summary.csv")
     summaries_ofsummary = get_global_summary(df["summary"].tolist())
 
     # save summariesofsummary
-    with open("summaries_of_summary.txt", "w") as f:
+    with open("data/summaries_of_summary.txt", "w") as f:
         f.write(summaries_ofsummary)

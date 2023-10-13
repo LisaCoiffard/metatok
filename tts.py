@@ -32,7 +32,7 @@ def create_mp3(path):
         summary = f.read()
 
     CHUNK_SIZE = 1024
-    audio_filename = 'podcast_output.mp3'
+    audio_filename = 'data/podcast_output.mp3'
     for i in range(len(summary) // 2400):
         response = get_speach_stream(summary[i * 2400:(i + 1) * 2400])
         with open(audio_filename, 'wb') as f:
@@ -42,7 +42,7 @@ def create_mp3(path):
 
 
 if __name__ == "__main__":
-    create_mp3("summaries_of_summary.txt")
+    create_mp3("data/summaries_of_summary.txt")
 
     print("MP3 generation finished")
 # import requests
