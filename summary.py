@@ -31,39 +31,37 @@ def get_global_summary(text_list):
         You are Oprah and are talking about the gossip with celebreties.
     """)
     #         News concerning the same people should be grouped together into a single sentence.
-    response =  chat.send_message(f"""Summarize the following bullet points. 
+    response =  chat.send_message(f"""
+        Summarize the previous bullet points. 
         The length of the summary should be around 4 paragraphs.
         Extract only the most outrageous stuff and cluster it into topics. Give me all the itti bitti details and the juicy stuff. Talk like oprah winfrey but you are not oprah just the style! \n
-        {text}""").candidates[0]
+        Just write the content do not write that you are writing a summary!!!
+        {text}
+        """).candidates[0]
     return str(response)
 def get_data(path):
     return pd.read_csv(path)
-def get_summary(path="data/transcription.csv"):
-    df = get_data(path)
-    df["summary"] = df["text"].apply(summarize_video)
+def get_summary(path="data/transcription.csv", load_summary=True):
+    if load_summary:
+        df = pd.read_csv("data/summary.csv")
+    else:
+        df = get_data(path)
+        df["summary"] = df["text"].apply(summarize_video)
     summary = get_global_summary(df["summary"].tolist())
+
     with open("data/summaries_of_summary.txt", "w") as f:
         f.write(summary)
 
 
-def youtube_channels_to_summary_mpr(channels):
-    time_frame = 1 # in days
-    transcrpt = Transcript(time_frame=time_frame, channel_ids=channels)
-    transcripts = transcrpt.get_transcript()
-    transcrpt.save_transcripts(transcripts, "transcripts")
-    get_summary()
+def youtube_channels_to_summary_mpr(channels, load_summary=True):
+    if not load_summary:
+        time_frame = 1 # in days
+        transcrpt = Transcript(time_frame=time_frame, channel_ids=channels)
+        transcripts = transcrpt.get_transcript()
+        transcrpt.save_transcripts(transcripts, "transcripts")
+    get_summary(load_summary=load_summary)
     create_mp3("data/summaries_of_summary.txt")
 
 if __name__=="__main__":
-    load_summary = True
-    if load_summary:
-        df = pd.read_csv("data/summary.csv")
-    else:
-        df = get_data()
-        df["summary"] = df["text"].apply(summarize_video)
-        df.to_csv("data/summary.csv")
-    summaries_ofsummary = get_global_summary(df["summary"].tolist())
+    youtube_channels_to_summary_mpr(None)
 
-    # save summariesofsummary
-    with open("data/summaries_of_summary.txt", "w") as f:
-        f.write(summaries_ofsummary)
