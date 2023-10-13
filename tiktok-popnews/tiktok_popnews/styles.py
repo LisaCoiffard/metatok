@@ -1,7 +1,7 @@
-bg_medium_color = "#d12bd1"
+bg_medium_color = "#ff0050"
 
 border_color = "#fff3"
-accent_color = "#c626c6"
+accent_color = "#00f2ea"
 
 input_style = dict(
     bg=bg_medium_color,
@@ -15,4 +15,14 @@ video_style = dict(
     height="auto",
     border_radius="15px 15px",
     border="5px solid #555",
+)
+
+channel_style = dict(
+    font_size="0.8em",
+    color="#6b626c"
+)
+
+logo_style = dict(
+width="300px",
+    height="auto",
 )

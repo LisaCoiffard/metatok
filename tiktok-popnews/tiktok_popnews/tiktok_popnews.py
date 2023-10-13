@@ -4,6 +4,7 @@ import time
 from rxconfig import config
 from typing import List
 from tiktok_popnews.styles import *
+from tiktok_popnews.backend import *
 
 import reflex as rx
 
@@ -40,7 +41,7 @@ class State(rx.State):
 
     def process(self):
         time.sleep(1)
-        # logic goes here
+        process_llm()
         self.video_generated = True
         self.processing = False
         self.video = "https://www.youtube.com/watch?v=Syupq6XpAcE"
@@ -63,22 +64,30 @@ def new_channel() -> rx.Component:
 
 
 def channels() -> rx.Component:
-    return rx.hstack(
+    return rx.vstack(
         rx.vstack(
             new_channel(),
             rx.foreach(State.channels, lambda channel: channel_item(channel)),
             width="100%"
         ),
         rx.vstack(
-            rx.text("Days to cover: " + State.days_to_cover),
+            rx.text("Days to cover: " + State.days_to_cover, font_weight="700"),
             rx.slider(
+                rx.slider_track(
+                    rx.slider_filled_track(bg="#ff0050"),
+                    bg="aqua",
+                ),
+                rx.slider_thumb(
+                    rx.icon(tag="sun", color="white"),
+                    box_size="1.5em",
+                    bg="#ff0050",
+                ),
                 on_change_end=State.set_days_to_cover,
                 color_scheme="green",
                 default_value=1,
                 min_=1,
                 max_=7,
             ),
-            width="100%"
         ),
         width="100%"
     )
@@ -88,12 +97,12 @@ def channel_item(item: rx.Var[str]) -> rx.Component:
     return rx.hstack(
         # A button to finish the item.
         # The item text.
-        rx.text(item, font_size="1.25em"),
-        rx.button("x",
+        rx.text(item, style=channel_style),
+        rx.button(rx.icon(
+            tag="delete",
+        ),
             on_click=lambda: State.remove_channel(item),
             height="1.5em",
-            background_color="white",
-            border="1px solid blue",
         ),
     )
 
@@ -132,7 +141,10 @@ def result2() -> rx.Component:
 def index() -> rx.Component:
     return rx.center(
         rx.vstack(
-            rx.heading("Channels"),
+            #rx.heading("MetaTok"),
+            rx.image(src="/metatok_logo2.png", style=logo_style),
+            rx.text("Escape the Social Media Scroll and Stay Informed", font_size="0.8em", font_weight="500", padding="0 0 20px 0px", margin="2px", color="#ff0050"),
+            rx.divider(),
             channels(),
             rx.divider(),
             generate_button(),
@@ -144,7 +156,8 @@ def index() -> rx.Component:
             border_radius="0.5em",
             shadow="lg",
             width="100%"
-        )
+        ),
+        width="100%"
     )
 
 
