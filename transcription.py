@@ -17,10 +17,12 @@ def get_transcription(video_id):
 
 class Transcript:
 
-    def __init__(self, time_frame) -> None:
+    def __init__(self, time_frame, channel_ids=None) -> None:
+        if channel_ids is None:
+            channel_ids = CHANNEL_IDS
         self.time_frame = time_frame
 
-        self.video_ids = [vid for channel_id in CHANNEL_IDS for vid in self._get_videos(channel_id)]
+        self.video_ids = [vid for channel_id in channel_ids for vid in self._get_videos(channel_id)]
         self.video_ids = pd.DataFrame(self.video_ids)
         self.video_ids = self._filter_time()
 

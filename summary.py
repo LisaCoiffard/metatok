@@ -1,5 +1,7 @@
 import pandas as pd
 import vertexai
+from transcription import Transcript
+from tts import create_mp3
 from vertexai.preview.language_models import ChatModel, TextGenerationModel
 
 vertexai.init(project="merantix-genai23ber-9504", location="us-central1")
@@ -34,8 +36,23 @@ def get_global_summary(text_list):
         Extract only the most outrageous stuff and cluster it into topics. Give me all the itti bitti details and the juicy stuff. Talk like oprah winfrey but you are not oprah just the style! \n
         {text}""").candidates[0]
     return str(response)
-def get_data():
-    return pd.read_csv("data/transcription.csv")
+def get_data(path):
+    return pd.read_csv(path)
+def get_summary(path="data/transcription.csv"):
+    df = get_data(path)
+    df["summary"] = df["text"].apply(summarize_video)
+    summary = get_global_summary(df["summary"].tolist())
+    with open("data/summaries_of_summary.txt", "w") as f:
+        f.write(summary)
+
+
+def youtube_channels_to_summary_mpr(channels):
+    time_frame = 1 # in days
+    transcrpt = Transcript(time_frame=time_frame, channel_ids=channels)
+    transcripts = transcrpt.get_transcript()
+    transcrpt.save_transcripts(transcripts, "transcripts")
+    get_summary()
+    create_mp3("data/summaries_of_summary.txt")
 
 if __name__=="__main__":
     load_summary = True
