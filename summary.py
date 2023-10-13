@@ -30,17 +30,23 @@ def get_global_summary(text_list):
     """)
     #         News concerning the same people should be grouped together into a single sentence.
     response =  chat.send_message(f"""Summarize the following bullet points. 
-        The length of the summary should be around
-        Make maximal one sentence per story. Give me all the itti bitti details and the juicy stuff. Talk like oprah winfrey but you are not oprah just the style! \n
+        The length of the summary should be around 4 paragraphs.
+        Extract only the most outrageous stuff and cluster it into topics. Give me all the itti bitti details and the juicy stuff. Talk like oprah winfrey but you are not oprah just the style! \n
         {text}""").candidates[0]
     return str(response)
 def get_data():
     return pd.read_csv("transcription.csv")
 
 if __name__=="__main__":
-    df = get_data()
-    df["summary"] = df["text"].apply(summarize_video)
+    load_summary = True
+    if load_summary:
+        df = pd.read_csv("summary.csv")
+    else:
+        df = get_data()
+        df["summary"] = df["text"].apply(summarize_video)
+        df.to_csv("summary.csv")
     summaries_ofsummary = get_global_summary(df["summary"].tolist())
+
     # save summariesofsummary
     with open("summaries_of_summary.txt", "w") as f:
         f.write(summaries_ofsummary)
