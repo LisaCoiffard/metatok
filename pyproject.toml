@@ -10,6 +10,10 @@ python = "^3.10"
 youtube-transcript-api = "*"
 pandas = "*"
 google-cloud-aiplatform = "^1.35.0"
+python-dotenv = "^1.0.0"
+openai = "^1.6.1"
+tqdm = ">4.9.0"
+fire = "^0.5.0"
 moviepy = "^1.0.3"
 
 
