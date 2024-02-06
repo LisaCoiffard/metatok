@@ -56,12 +56,12 @@ def get_summary(path="data/transcription.csv", load_summary=True):
 def youtube_channels_to_summary_mpr(channels, load_summary=True):
     if not load_summary:
         time_frame = 1 # in days
-        transcrpt = Transcript(time_frame=time_frame, channel_ids=channels)
+        transcrpt = Transcript(time_frame=time_frame, channels=channels)
         transcripts = transcrpt.get_transcript()
         transcrpt.save_transcripts(transcripts, "transcripts")
     get_summary(load_summary=load_summary)
     create_mp3("data/summaries_of_summary.txt")
 
 if __name__=="__main__":
-    youtube_channels_to_summary_mpr(None)
+    youtube_channels_to_summary_mpr(None, load_summary=False)
 

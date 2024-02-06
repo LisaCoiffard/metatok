@@ -10,6 +10,7 @@ python = "^3.10"
 youtube-transcript-api = "*"
 pandas = "*"
 google-cloud-aiplatform = "^1.35.0"
+moviepy = "^1.0.3"
 
 
 [build-system]

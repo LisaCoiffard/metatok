@@ -18,14 +18,16 @@ def get_transcription(video_id):
 
 class Transcript:
 
-    def __init__(self, time_frame, channels=CHANNEL_IDS) -> None:
+    def __init__(self, time_frame, channels=None) -> None:
         self.time_frame = time_frame
+        if channels is None:
+            channels = CHANNEL_IDS
 
         self.video_ids = [vid for channel_id in channels for vid in self._get_videos(channel_id)]
         self.video_ids = pd.DataFrame(self.video_ids)
         self.video_ids = self._filter_time()
 
-    def _get_videos(self, channel_id, num_videos=50, api_key=API_KEY):
+    def _get_videos(self, channel_id, num_videos=10, api_key=API_KEY):
         base_url = "https://www.googleapis.com/youtube/v3/search"
     
         params = {
@@ -38,6 +40,7 @@ class Transcript:
         }
         
         response = requests.get(base_url, params=params)
+        print(response.text)
         data = response.json()
         
         videos = [{"vid":item['id']['videoId'], 
